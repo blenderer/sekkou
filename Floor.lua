@@ -1,3 +1,4 @@
+require 'vendor/random'
 require 'vendor/middleclass'
 require 'vendor/Array2d'
 require 'Room'
@@ -10,4 +11,12 @@ function Floor:initialize(room_count, room_interface)
 	self.ri = room_interface
 
 	self.tiles = Array2d:new()
+end
+
+function Floor:build()
+
+end
+
+function Floor:print()
+
 end
