@@ -11,6 +11,26 @@ function Array2d:get(col, row)
 	return self.grid[col][row]
 end
 
+function Array2d:neighbor(col, row, pos)
+	neighbor = nil
+
+	if pos == 'left' then
+		self:check(col - 1)
+		neighbor = self.grid[col - 1][row]
+	elseif pos == 'right' then
+		self:check(col + 1)
+		neighbor = self.grid[col + 1][row]
+	elseif pos == 'top' then
+		self:check(col)
+		neighbor = self.grid[col][row - 1]
+	elseif pos == 'bottom' then
+		self:check(col)
+		neighbor = self.grid[col][row + 1]
+	end
+
+	return neighbor
+end
+
 function Array2d:set(col, row, object)
 	self:check(col)
 

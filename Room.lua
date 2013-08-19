@@ -1,8 +1,8 @@
 Room = class('Room')
 
-function Room:initialize(xpos, ypos, width, height)
-	self.x = xpos
-	self.y = ypos
+function Room:initialize(col, row, width, height)
+	self.x = col
+	self.y = row
 	self.w = width
 	self.h = height
 end
