@@ -4,6 +4,8 @@ require 'Room'
 require 'Corridor'
 require 'Tile'
 
+math.randomseed(os.time())
+
 Floor = class('Floor')
 
 function Floor:initialize(room_count, room_interface)
