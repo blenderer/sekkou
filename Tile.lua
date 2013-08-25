@@ -1,10 +1,10 @@
 Tile = class('Tile')
 
-function Tile:initialize(col, row, walkable, grid)
+function Tile:initialize(col, row, grid)
 	self.x = col
 	self.y = row
-	self.walkable = walkable
 	self.grid = grid
+	self.room = nil
 end
 
 function Tile:getLeft()

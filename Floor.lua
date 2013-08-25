@@ -21,6 +21,7 @@ function Floor:build()
 	--build the first room
 	self:addRoom(0, 0)
 	self:addRoom(-12, -12)
+	self:addRoom(4, 4)
 end
 
 function Floor:print()
@@ -56,16 +57,14 @@ function Floor:print()
 		print(line)
 	end
 
+	walkable = self:getWalkable()
+
 	--this loop builds the rows
 	for y = ymin, ymax do
 		line = ""
 		for x = xmin, xmax do
-			if self.tiles:get(x, y) then
-				if self.tiles:get(x, y).walkable then
-					line = line .. 'X'
-				else
-					line = line .. ' '
-				end
+			if walkable[x][y] == 0 then
+				line = line .. 'X'
 			else
 				line = line .. ' '
 			end
@@ -82,13 +81,42 @@ function Floor:addRoom(xpos, ypos)
 		room_interface = 1
 	end
 
-	table.insert(self.rooms, Room:new(0, 0, self.ri[room_interface].w, self.ri[room_interface].h))
+	newroom = Room:new(0, 0, self.ri[room_interface].w, self.ri[room_interface].h)
+
+	table.insert(self.rooms, newroom)
 	for x = 0, self.ri[room_interface].w - 1 do
 		for y = 0, self.ri[room_interface].h - 1 do
 			tilex = xpos + x
 			tiley = ypos + y
-			self.tiles:set(tilex, tiley, Tile:new(tilex, tiley, true, self.tiles))
-			print("new tile created @: " .. tilex, tiley)
+
+			newtile = Tile:new(tilex, tiley, self.tiles)
+			newtile.room = newroom
+			table.insert(newroom.tiles, newtile)
+
+			self.tiles:set(tilex, tiley, newtile)
 		end
 	end
+end
+
+function Floor:getWalkable()
+	xmin, xmax, ymin, ymax = self.tiles:getBounds()
+
+	walkable = {}
+
+	for x = xmin, xmax do
+		walkable[x] = {}
+		for y = ymin, ymax do
+			if self.tiles:get(x, y) then
+				if self.tiles:get(x, y):__tostring() == "Tile" then
+					walkable[x][y] = 0
+				else
+					walkable[x][y] = 1
+				end
+			else
+				walkable[x][y] = 1
+			end
+		end
+	end
+
+	return walkable
 end

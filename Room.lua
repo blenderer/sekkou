@@ -5,4 +5,5 @@ function Room:initialize(col, row, width, height)
 	self.y = row
 	self.w = width
 	self.h = height
+	self.tiles = {}
 end

@@ -23,7 +23,7 @@ end
 
 local function _setClassMetatable(klass)
   setmetatable(klass, {
-    __tostring = function() return "class " .. klass.name end,
+    __tostring = function() return klass.name end,
     __index    = klass.static,
     __newindex = klass.__instanceDict,
     __call     = function(self, ...) return self:new(...) end
@@ -114,7 +114,7 @@ end
 
 function Object:initialize() end
 
-function Object:__tostring() return "instance of " .. tostring(self.class) end
+function Object:__tostring() return tostring(self.class) end
 
 function class(name, super, ...)
   super = super or Object
