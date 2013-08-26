@@ -15,13 +15,51 @@ function Floor:initialize(room_count, room_interface)
 	self.tiles = Array2d:new()
 
 	self.rooms = {}
+
+	self.width, self.height = self:makeBounds()
+	self.startx = math.ceil(-1 * self.width / 2)
+	self.starty = math.ceil(-1 * self.height / 2)
+
 end
 
 function Floor:build()
 	--build the first room
-	self:addRoom(0, 0)
-	self:addRoom(-12, -12)
-	self:addRoom(4, 4)
+	first_room_interface = self:getRandomRI()
+
+	first_room_x = math.ceil(0 - first_room_interface.w / 2)
+	first_room_y = math.ceil(0 - first_room_interface.h / 2)
+
+	self:addRoom(first_room_x, first_room_y, first_room_interface)
+
+	for i = 1, self.n - 1 do
+		repeat
+			rand_interface = self:getRandomRI()
+			randx = math.random(self.startx, self.startx + self.width)
+			randy = math.random(self.starty, self.starty + self.height)
+		until self:isGoodSpot(randx, randy, rand_interface)
+		self:addRoom(randx, randy, rand_interface)
+	end
+end
+
+function Floor:makeBounds()
+	max_width = 0
+	max_height = 0
+
+	for i = 1, #self.ri do
+		if self.ri[i].w > max_width then
+			max_width = self.ri[i].w
+		end
+		if self.ri[i].h > max_height then
+			max_height = self.ri[i].h
+		end
+	end
+
+	arb_num = self.n
+
+	width = math.ceil(max_width * arb_num)
+	height = math.ceil(max_height * arb_num)
+
+	return width, height
 end
 
 function Floor:print()
@@ -74,18 +112,36 @@ function Floor:print()
 	
 end
 
-function Floor:addRoom(xpos, ypos)
+function Floor:isGoodSpot(xpos, ypos, ri)
+	clear = true
+
+	for x = xpos, xpos + ri.w - 1 do
+		for y = ypos, ypos + ri.h - 1 do
+			if self.tiles:get(x,y) then
+				clear = false
+			end
+		end
+	end
+
+	return clear
+end
+
+function Floor:getRandomRI()
 	if #self.ri > 1 then
 		room_interface = math.random(1, #self.ri)
 	else
 		room_interface = 1
 	end
 
-	newroom = Room:new(0, 0, self.ri[room_interface].w, self.ri[room_interface].h)
+	return self.ri[room_interface]
+end
+
+function Floor:addRoom(xpos, ypos, ri)
+	newroom = Room:new(0, 0, ri.w, ri.h)
 
 	table.insert(self.rooms, newroom)
-	for x = 0, self.ri[room_interface].w - 1 do
-		for y = 0, self.ri[room_interface].h - 1 do
+	for x = 0, ri.w - 1 do
+		for y = 0, ri.h - 1 do
 			tilex = xpos + x
 			tiley = ypos + y
 
