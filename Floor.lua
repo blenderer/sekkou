@@ -8,9 +8,11 @@ math.randomseed(os.time())
 
 Floor = class('Floor')
 
-function Floor:initialize(room_count, room_interface)
+function Floor:initialize(room_count, room_distance, room_interface)
 	self.n = room_count
 	self.ri = room_interface
+
+	self.distance = room_distance
 
 	self.tiles = Array2d:new()
 
@@ -31,6 +33,7 @@ function Floor:build()
 
 	self:addRoom(first_room_x, first_room_y, first_room_interface)
 
+	--build the rest of the rooms
 	for i = 1, self.n - 1 do
 		repeat
 			rand_interface = self:getRandomRI()
@@ -39,6 +42,8 @@ function Floor:build()
 		until self:isGoodSpot(randx, randy, rand_interface)
 		self:addRoom(randx, randy, rand_interface)
 	end
+
+	--build the corridors
 end
 
 function Floor:makeBounds()
@@ -54,7 +59,7 @@ function Floor:makeBounds()
 		end
 	end
 
-	arb_num = self.n
+	arb_num = self.n * .55
 
 	width = math.ceil(max_width * arb_num)
 	height = math.ceil(max_height * arb_num)
@@ -115,8 +120,8 @@ end
 function Floor:isGoodSpot(xpos, ypos, ri)
 	clear = true
 
-	for x = xpos, xpos + ri.w - 1 do
-		for y = ypos, ypos + ri.h - 1 do
+	for x = xpos - self.distance, xpos + ri.w - 1 + self.distance do
+		for y = ypos - self.distance, ypos + ri.h - 1 + self.distance do
 			if self.tiles:get(x,y) then
 				clear = false
 			end
