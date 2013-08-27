@@ -7,7 +7,7 @@ Sekkou is a dungeon-building class made in lua, OOP implementation by Kikito's M
 
 Example Usage like this:
 
-`require 'Floor'
+```require 'Floor'
 
 roomtype1 = {w=4, h=11}
 roomtype2 = {w=5, h=8}
@@ -18,4 +18,4 @@ dungeon = Floor:new(8, 3, {roomtype1, roomtype2, roomtype3})
 
 dungeon:build()
 
-dungeon:print()`
+dungeon:print()```
