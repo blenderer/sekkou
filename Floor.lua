@@ -159,6 +159,10 @@ function Floor:addRoom(xpos, ypos, ri)
 	end
 end
 
+function Floor:getClosestRoom(origin_room)
+	
+end
+
 function Floor:getWalkable()
 	xmin, xmax, ymin, ymax = self.tiles:getBounds()
 
