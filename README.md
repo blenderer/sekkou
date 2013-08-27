@@ -19,5 +19,9 @@ dungeon = Floor:new(8, 3, {roomtype1, roomtype2, roomtype3})
 
 dungeon:build()
 
+map = dungeon:getWalkable() --this returns an x/y grid with 1's as non-walkable and 0's as walkable
+
+starting_spot = map[14][-6] --accessible like this
+
 dungeon:print()
 ```
