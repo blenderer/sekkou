@@ -1,10 +1,10 @@
 require 'Floor'
 
-roomtype1 = {w=4, h=11}
-roomtype2 = {w=5, h=8}
-roomtype3 = {w=3, h=16}
+roomtype1 = {w=9, h=9}
+--roomtype2 = {w=5, h=4}
+--roomtype3 = {w=6, h=3}
 
-dungeon = Floor:new(8, 3, {roomtype1, roomtype2, roomtype3})
+dungeon = Floor:new(7, 3, {roomtype1})
 
 dungeon:build()
 

@@ -19,8 +19,8 @@ function Floor:initialize(room_count, room_distance, room_interface)
 	self.rooms = {}
 
 	self.width, self.height = self:makeBounds()
-	self.startx = math.ceil(-1 * self.width / 2)
-	self.starty = math.ceil(-1 * self.height / 2)
+	self.startx = math.ceil(self.width / 2)
+	self.starty = math.ceil(self.height / 2)
 
 end
 
@@ -28,8 +28,8 @@ function Floor:build()
 	--build the first room
 	first_room_interface = self:getRandomRI()
 
-	first_room_x = math.ceil(0 - first_room_interface.w / 2)
-	first_room_y = math.ceil(0 - first_room_interface.h / 2)
+	first_room_x = 1
+	first_room_y = 1
 
 	self:addRoom(first_room_x, first_room_y, first_room_interface)
 
@@ -42,8 +42,10 @@ function Floor:build()
 		until self:isGoodSpot(randx, randy, rand_interface)
 		self:addRoom(randx, randy, rand_interface)
 	end
-
+	
 	--build the corridors
+	self:makeCorridor(first_room_x, first_room_y, randx, randy)
+
 end
 
 function Floor:makeBounds()
@@ -103,9 +105,9 @@ function Floor:print()
 	walkable = self:getWalkable()
 
 	--this loop builds the rows
-	for y = ymin, ymax do
+	for y = 1, #walkable[1] do
 		line = ""
-		for x = xmin, xmax do
+		for x = 1, #walkable do
 			if walkable[x][y] == 0 then
 				line = line .. 'X'
 			else
@@ -142,7 +144,7 @@ function Floor:getRandomRI()
 end
 
 function Floor:addRoom(xpos, ypos, ri)
-	newroom = Room:new(0, 0, ri.w, ri.h)
+	newroom = Room:new(xpos, ypos, ri.w, ri.h)
 
 	table.insert(self.rooms, newroom)
 	for x = 0, ri.w - 1 do
@@ -168,20 +170,31 @@ function Floor:getWalkable()
 
 	walkable = {}
 
+	startx = 1
+
 	for x = xmin, xmax do
-		walkable[x] = {}
+		walkable[startx] = {}
+
+		starty = 1
 		for y = ymin, ymax do
 			if self.tiles:get(x, y) then
 				if self.tiles:get(x, y):__tostring() == "Tile" then
-					walkable[x][y] = 0
+					walkable[startx][starty] = 0
 				else
-					walkable[x][y] = 1
+					walkable[startx][starty] = 1
 				end
 			else
-				walkable[x][y] = 1
+				walkable[startx][starty] = 1
 			end
+			starty = starty + 1
 		end
+		startx = startx + 1
 	end
 
-	return walkable
+	return walkable, xmin, xmax, ymin, ymax
+end
+
+function Floor:makeCorridor(x1, y1, x2, y2)
+	new_corridor = Corridor:new(x1, y1, x2, y2)
+	new_corridor:makePath(self:getWalkable(), x1, y1, x2, y2)
 end
