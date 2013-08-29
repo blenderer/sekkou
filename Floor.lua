@@ -25,16 +25,8 @@ function Floor:initialize(room_count, room_distance, room_interface)
 end
 
 function Floor:build()
-	--build the first room
-	first_room_interface = self:getRandomRI()
-
-	first_room_x = 1
-	first_room_y = 1
-
-	self:addRoom(first_room_x, first_room_y, first_room_interface)
-
-	--build the rest of the rooms
-	for i = 1, self.n - 1 do
+	--build the rooms
+	for i = 1, self.n do
 		repeat
 			rand_interface = self:getRandomRI()
 			randx = math.random(1, self.width)
@@ -223,7 +215,7 @@ end
 
 function Floor:makeCorridor(x1, y1, x2, y2)
 	new_corridor = Corridor:new(x1, y1, x2, y2)
-	corridor_nodes = new_corridor:makePath(self:getWalkable(true), x1, y1, x2, y2)
+	corridor_nodes = new_corridor:makePath(self:getWalkable(true))
 	for i = 1, #corridor_nodes do
 		self.tiles:set(corridor_nodes[i].x, corridor_nodes[i].y, Tile:new(corridor_nodes[i].x, corridor_nodes[i].y, self.tiles, "c"))
 	end

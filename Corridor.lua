@@ -13,14 +13,14 @@ function Corridor:initialize(startx, starty, endx, endy)
 	self.tiles = {}
 end
 
-function Corridor:makePath(map, x1, y1, x2, y2)
+function Corridor:makePath(map)
 	grid = Grid(map)
 
 	myFinder = Pathfinder(grid, 'JPS', "1")
 
 	myFinder:setMode('ORTHOGONAL')
 
-	path = myFinder:getPath(x1, y1, x2, y2)
+	path = myFinder:getPath(self.startx, self.starty, self.endx, self.endy)
 
 	nodes = {}
 
