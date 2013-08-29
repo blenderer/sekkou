@@ -1,6 +1,9 @@
 (石工) Sekkou
 ======
 
+Development Status: 0.4
+Needed Features still to implement
+
 石工 is japanese for "Mason", which we all know of as a professional brick/stone layer.
 
 Sekkou is a dungeon-building class made in lua, OOP implementation by Kikito's Middleclass library. Sekkou's final product will be an x,y grid of tiles.
