@@ -16,9 +16,21 @@ end
 function Corridor:makePath(map, x1, y1, x2, y2)
 	grid = Grid(map)
 
-	myFinder = Pathfinder(grid, 'JPS', 0)
+	myFinder = Pathfinder(grid, 'JPS', "1")
 
 	myFinder:setMode('ORTHOGONAL')
 
 	path = myFinder:getPath(x1, y1, x2, y2)
+
+	nodes = {}
+
+	if path then
+		for node, count in path:nodes() do
+			table.insert(nodes, {x = node:getX(), y = node:getY()})
+		end
+	else
+		return false
+	end
+
+	return nodes
 end

@@ -19,8 +19,8 @@ function Floor:initialize(room_count, room_distance, room_interface)
 	self.rooms = {}
 
 	self.width, self.height = self:makeBounds()
-	self.startx = math.ceil(self.width / 2)
-	self.starty = math.ceil(self.height / 2)
+	self.startx = math.ceil(1)
+	self.starty = math.ceil(1)
 
 end
 
@@ -37,14 +37,14 @@ function Floor:build()
 	for i = 1, self.n - 1 do
 		repeat
 			rand_interface = self:getRandomRI()
-			randx = math.random(self.startx, self.startx + self.width)
-			randy = math.random(self.starty, self.starty + self.height)
+			randx = math.random(1, self.width)
+			randy = math.random(1, self.height)
 		until self:isGoodSpot(randx, randy, rand_interface)
 		self:addRoom(randx, randy, rand_interface)
 	end
 	
 	--build the corridors
-	self:makeCorridor(first_room_x, first_room_y, randx, randy)
+	--self:makeCorridor(first_room_x, first_room_y, randx, randy)
 
 end
 
@@ -61,11 +61,10 @@ function Floor:makeBounds()
 		end
 	end
 
-	arb_num = self.n * .55
+	arb_num = self.n * .95
 
 	width = math.ceil(max_width * arb_num)
 	height = math.ceil(max_height * arb_num)
-
 	return width, height
 end
 
@@ -110,6 +109,8 @@ function Floor:print()
 		for x = 1, #walkable do
 			if walkable[x][y] == 0 then
 				line = line .. 'X'
+			elseif walkable[x][y] == 2 then
+				line = line .. '-'
 			else
 				line = line .. ' '
 			end
@@ -165,30 +166,56 @@ function Floor:getClosestRoom(origin_room)
 	
 end
 
-function Floor:getWalkable()
+function Floor:getWalkable(charmap)
+	stringmap = charmap or false
+
 	xmin, xmax, ymin, ymax = self.tiles:getBounds()
 
 	walkable = {}
 
 	startx = 1
 
-	for x = xmin, xmax do
-		walkable[startx] = {}
+	if not stringmap then
 
-		starty = 1
-		for y = ymin, ymax do
-			if self.tiles:get(x, y) then
-				if self.tiles:get(x, y):__tostring() == "Tile" then
-					walkable[startx][starty] = 0
+		for x = xmin, xmax do
+			walkable[startx] = {}
+
+			starty = 1
+			for y = ymin, ymax do
+				if self.tiles:get(x, y) then
+					if self.tiles:get(x, y):__tostring() == "Tile" and self.tiles:get(x, y).type == "r" then
+						walkable[startx][starty] = 0
+					elseif self.tiles:get(x, y):__tostring() == "Tile" and self.tiles:get(x, y).type == "c" then
+						walkable[startx][starty] = 2
+					else
+						walkable[startx][starty] = 1
+					end
 				else
 					walkable[startx][starty] = 1
 				end
-			else
-				walkable[startx][starty] = 1
+				starty = starty + 1
 			end
-			starty = starty + 1
+			startx = startx + 1
 		end
-		startx = startx + 1
+	else
+		dastring = ""
+
+		for y = ymin, ymax do
+			for x = xmin, xmax do
+				if self.tiles:get(x, y) then
+					if self.tiles:get(x, y):__tostring() == "Tile" then
+						dastring = dastring .. 0
+					else
+						dastring = dastring .. 1
+					end
+				else
+					dastring = dastring .. 1
+				end
+			end
+			dastring = dastring .. '\n'
+		end
+		string.sub(dastring, 1, -2)
+		walkable = dastring
 	end
 
 	return walkable, xmin, xmax, ymin, ymax
@@ -196,5 +223,8 @@ end
 
 function Floor:makeCorridor(x1, y1, x2, y2)
 	new_corridor = Corridor:new(x1, y1, x2, y2)
-	new_corridor:makePath(self:getWalkable(), x1, y1, x2, y2)
+	corridor_nodes = new_corridor:makePath(self:getWalkable(true), x1, y1, x2, y2)
+	for i = 1, #corridor_nodes do
+		self.tiles:set(corridor_nodes[i].x, corridor_nodes[i].y, Tile:new(corridor_nodes[i].x, corridor_nodes[i].y, self.tiles, "c"))
+	end
 end

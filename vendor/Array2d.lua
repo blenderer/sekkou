@@ -2,7 +2,7 @@ Array2d = class('Array2d')
 
 function Array2d:initialize()
 	self.grid = {}
-	self.bounds = {col_low = 0, col_high = 0, row_low = 0, row_high = 0}
+	self.bounds = {col_low = 1, col_high = 1, row_low = 1, row_high = 1}
 end
 
 function Array2d:get(col, row)

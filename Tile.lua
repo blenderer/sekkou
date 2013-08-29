@@ -1,10 +1,11 @@
 Tile = class('Tile')
 
-function Tile:initialize(col, row, grid)
+function Tile:initialize(col, row, grid, tipe)
 	self.x = col
 	self.y = row
 	self.grid = grid
 	self.room = nil
+	self.type = tipe or "r"
 end
 
 function Tile:getLeft()
