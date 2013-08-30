@@ -19,8 +19,10 @@ function Floor:initialize(room_count, room_distance, room_interface)
 	self.rooms = {}
 
 	self.width, self.height = self:makeBounds()
-	self.startx = math.ceil(1)
-	self.starty = math.ceil(1)
+	self.centerx = math.ceil(self.width / 2)
+	self.centery = math.ceil(self.height / 2)
+	self.startx = 1
+	self.starty = 1
 
 end
 
@@ -34,9 +36,9 @@ function Floor:build()
 		until self:isGoodSpot(randx, randy, rand_interface)
 		self:addRoom(randx, randy, rand_interface)
 	end
+	print(self:getClosestFromPoint(self.centerx, self.centery):getPos())
 	
 	--build the corridors
-	--self:makeCorridor(first_room_x, first_room_y, randx, randy)
 
 end
 
@@ -219,4 +221,21 @@ function Floor:makeCorridor(x1, y1, x2, y2)
 	for i = 1, #corridor_nodes do
 		self.tiles:set(corridor_nodes[i].x, corridor_nodes[i].y, Tile:new(corridor_nodes[i].x, corridor_nodes[i].y, self.tiles, "c"))
 	end
+end
+
+function Floor:getClosestFromPoint(xpos, ypos)
+	closest_room = nil
+	closest_distance = math.huge
+
+	for i = 1, #self.rooms do
+		roomx, roomy = self.rooms[i]:getPos()
+		distance = math.sqrt(math.pow(roomx - xpos, 2) + math.pow(roomy - ypos, 2))
+
+		if distance < closest_distance then
+			closest_room = self.rooms[i]
+			closest_distance = distance
+		end
+	end
+
+	return closest_room
 end
