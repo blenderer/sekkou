@@ -219,7 +219,9 @@ function Floor:makeCorridor(x1, y1, x2, y2)
 	new_corridor = Corridor:new(x1, y1, x2, y2)
 	corridor_nodes = new_corridor:makePath(self:getWalkable(true))
 	for i = 1, #corridor_nodes do
-		self.tiles:set(corridor_nodes[i].x, corridor_nodes[i].y, Tile:new(corridor_nodes[i].x, corridor_nodes[i].y, self.tiles, "c"))
+		new_tile = Tile:new(corridor_nodes[i].x, corridor_nodes[i].y, self.tiles, "c")
+		new_tile:addTag("corridor")
+		self.tiles:set(corridor_nodes[i].x, corridor_nodes[i].y, new_tile)
 	end
 end
 
