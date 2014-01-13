@@ -10,6 +10,7 @@ function Corridor:initialize(startx, starty, endx, endy)
 	self.sy = starty 
 	self.ex = endx 
 	self.ey = endy 
+
 	self.tiles = {}
 end
 
@@ -20,7 +21,7 @@ function Corridor:makePath(map)
 
 	myFinder:setMode('ORTHOGONAL')
 
-	path = myFinder:getPath(self.startx, self.starty, self.endx, self.endy)
+	path = myFinder:getPath(self.sx, self.sy, self.ex, self.ey)
 
 	nodes = {}
 

@@ -36,7 +36,7 @@ function Floor:build()
 		until self:isGoodSpot(randx, randy, rand_interface)
 		self:addRoom(randx, randy, rand_interface)
 	end
-	print(self:getClosestFromPoint(self.centerx, self.centery):getPos())
+	--print(self:getClosestFromPoint(self.centerx, self.centery):getPos())
 	
 	--build the corridors
 
