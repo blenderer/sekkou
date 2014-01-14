@@ -7,6 +7,7 @@ function Room:initialize(col, row, width, height)
 	self.h = height
 	self.tiles = {}
 	self.connected = false
+	self.connected_rooms = {}
 end
 
 function Room:getPos()

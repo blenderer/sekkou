@@ -39,6 +39,29 @@ function Floor:build()
 	
 	--build the corridors
 
+	for i = 1, #self.rooms do
+		--if room is not connected, continue
+		if not self.rooms[i].connected then
+			--find a random room that is not itself
+			repeat 
+				random_room = math.random(1, #self.rooms)
+			until random_room ~= i
+
+			--connect the two rooms
+			self:connectRooms(self.rooms[i], self.rooms[random_room])
+
+		end
+	end
+
+end
+
+function Floor:connectRooms(room1, room2)
+	room1.connected = true
+	room2.connected = true
+
+	table.insert(room1.connected_rooms, room2)
+	table.insert(room2.connected_rooms, room1)
+	--incomplete, we need to recursively connect rooms and such
 end
 
 function Floor:makeBounds()
@@ -208,7 +231,11 @@ function Floor:getWalkable(charmap)
 			for x = xmin, xmax do
 				if self.tiles:get(x, y) then
 					if self.tiles:get(x, y):__tostring() == "Tile" then
-						dastring = dastring .. 0
+						if self.tiles:get(x, y).type == "c" then
+							dastring = dastring .. 1
+						else
+							dastring = dastring .. 0
+						end
 					else
 						dastring = dastring .. 1
 					end
