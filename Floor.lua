@@ -36,7 +36,6 @@ function Floor:build()
 		until self:isGoodSpot(randx, randy, rand_interface)
 		self:addRoom(randx, randy, rand_interface)
 	end
-	--print(self:getClosestFromPoint(self.centerx, self.centery):getPos())
 	
 	--build the corridors
 
@@ -154,6 +153,17 @@ function Floor:addRoom(xpos, ypos, ri)
 			self.tiles:set(tilex, tiley, newtile)
 		end
 	end
+end
+
+function Floor:getUnconnectedRooms()
+	unconnectedrooms = {}
+	for x = 1, #self.rooms do
+		if not self.rooms[x].connected then
+			table.insert(unconnectedrooms, self.rooms[x])
+		end
+	end
+
+	return unconnectedrooms
 end
 
 function Floor:getClosestRoom(origin_room)
