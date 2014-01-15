@@ -49,7 +49,7 @@ function Floor:build()
 
 			--connect the two rooms
 			self:connectRooms(self.rooms[i], self.rooms[random_room])
-
+			print("connecting room " .. i .. " with room " .. random_room)
 		end
 	end
 
@@ -59,9 +59,16 @@ function Floor:connectRooms(room1, room2)
 	room1.connected = true
 	room2.connected = true
 
+	--print(room2.__tostring)
+
 	table.insert(room1.connected_rooms, room2)
 	table.insert(room2.connected_rooms, room1)
 	--incomplete, we need to recursively connect rooms and such
+
+	room1doorx, room1doory = room1:getNewDoorCoords()
+	room2doorx, room2doory = room2:getNewDoorCoords()
+
+	self:makeCorridor(room1doorx, room1doory, room2doorx, room2doory)
 end
 
 function Floor:makeBounds()
